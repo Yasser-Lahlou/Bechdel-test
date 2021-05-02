@@ -23,16 +23,19 @@ def movie_list():
     movies_list = soup.select('p a')
     list_urls = []
     for movie in movies_list:
+        #get clean movie title
+        clean_title = movie.text
+        #get filepath movie title
         movie_title = movie['title']
         movie_title = movie_title.replace(' ', '-')
         movie_title = re.sub(r'\:', '', movie_title)
         movie_title = re.sub(r'-Script', '', movie_title)
         movie_url = URL_BASE + movie_title + '.html'
-        list_urls.append([movie_title, movie_url])
+        list_urls.append([movie_title, movie_url, clean_title])
     return list_urls
 
 # for each movie url, save script content in a .txt file (and identifies errors)
-def scrap_script(title, url):
+def scrap_script(title, url, clean_title):
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, features="lxml")
     tags = soup.select('pre')
@@ -40,6 +43,8 @@ def scrap_script(title, url):
     if len(tags) != 0:
         script = tags[-1]
         with open(f'IMSDB_scripts/{title}.txt', "w", encoding='utf-8', errors='ignore') as f:
+            f.write(clean_title)
+            f.write('\n')
             f.write(script.text)
     else:
         non_scraped.append(title)
@@ -47,4 +52,4 @@ def scrap_script(title, url):
 
 # create all .txt files
 for movie in movie_list():
-    scrap_script(movie[0], movie[1])
+    scrap_script(movie[0], movie[1], movie[2])
