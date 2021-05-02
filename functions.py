@@ -136,4 +136,4 @@ def bechdel_test_3(script, female_names, male_names):
                 # we went through all the tokens without setting test_passed to false
                 return test_passed
     # we went through all the scenes without returing True
-    return test_passed
+    return False
