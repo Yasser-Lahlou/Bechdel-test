@@ -1,4 +1,4 @@
-import requests, re
+import requests, re, csv
 from bs4 import BeautifulSoup
 
 URL = 'https://imsdb.com/all-scripts.html'
@@ -11,13 +11,13 @@ headers = {
 # save all home page scripts
 def scrap_list(url):
     response = requests.get(url, headers=headers)
-    with open('IMSDB_script_list', "w") as f:
+    with open('data/IMSDB_script_list', "w") as f:
         f.write(response.text)
 scrap_list(URL)
 
-# create list of movie titles and script urls
+# create list of movie titles and script urls and saves in csv
 def movie_list():
-    with open('IMSDB_script_list', "r") as f:
+    with open('data/IMSDB_script_list', "r") as f:
         data = f.read()
     soup = BeautifulSoup(data, features="lxml")
     movies_list = soup.select('p a')
@@ -32,8 +32,18 @@ def movie_list():
         movie_title = re.sub(r'-Script', '', movie_title)
         movie_url = URL_BASE + movie_title + '.html'
         list_urls.append([movie_title, movie_url, clean_title])
+    with open('data/movie_titles.csv', 'w', newline='') as f:
+        wr = csv.writer(f)
+        wr.writerows(list_urls)
     return list_urls
 
+# create list of movie titles to perform a search
+def movie_csv():
+    list_urls = movie_list()
+    list_titles = [movie[2] for movie in list_urls]
+    with open('data/movie_titles.txt', "w") as f:
+        for title in list_titles:
+            f.write("%s\n" % title)
 # for each movie url, save script content in a .txt file (and identifies errors)
 def scrap_script(title, url, clean_title):
     response = requests.get(url, headers=headers)

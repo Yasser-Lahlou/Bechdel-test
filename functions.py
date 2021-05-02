@@ -1,6 +1,22 @@
+import re, csv
+import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
-def parse_script(filepath):
+def female_names_generator(filepath):
+    with open(filepath) as f:
+        female_names = f.read().splitlines()[7:]
+    return female_names
+
+def male_names_generator(filepath):
+    with open(filepath) as f:
+        male_names = f.read().splitlines()[7:]
+    return male_names
+
+def movie_titles_generator(filepath):
+    df = pd.read_csv(filepath, names=['title', 'url', 'clean_title'])
+    return df
+
+def read_script(filepath):
     """Takes a .txt filepath from the IMSDB scraped scripts folder
         and creates a parsed script
         Args:
@@ -21,7 +37,7 @@ def break_scenes(script):
     """
     headings = sorted([i for i,line in enumerate(script) if ('INT.' in line or 'EXT.' in line)])
     headings.append(len(script))
-    scenes = [data[headings[i]+1:headings[i+1]] for i in range(len(headings)-1)]
+    scenes = [script[headings[i]+1:headings[i+1]] for i in range(len(headings)-1)]
     return scenes
 
 def extract_characters(script_slice, indent=15):
@@ -72,7 +88,7 @@ def scene_tokenizer(script_slice):
             tokens.remove(character)
     return tokens
 
-def bechdel_test_1(script):
+def bechdel_test_1(script, female_names):
     """Tests wheter a script passes the First Bechdel Test :
         There are two female names in the script
         Args:
@@ -83,7 +99,7 @@ def bechdel_test_1(script):
     count = female_count(script, female_names)
     return count > 1
 
-def bechdel_test_2(script):
+def bechdel_test_2(script, female_names):
     """Tests wheter a script passes the Second Bechdel Test :
         Two female women are talking in a scene
         Args:
@@ -97,7 +113,7 @@ def bechdel_test_2(script):
             return True
     return False
 
-def bechdel_test_3(script, male_names):
+def bechdel_test_3(script, female_names, male_names):
     """Tests wheter a script passes the Third Bechdel Test :
         Two female women are talking in a scene about something other than a man
         Args:
@@ -105,6 +121,7 @@ def bechdel_test_3(script, male_names):
         Returns:
             Bool : True if the script passes the test, False otherwise
     """
+    scenes = break_scenes(script)
     for scene in scenes:
         test_passed = False
         if female_count(scene, female_names) > 1:
