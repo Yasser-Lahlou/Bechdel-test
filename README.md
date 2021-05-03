@@ -33,4 +33,4 @@ Various functions are used to :
 The movie scripts were provided by [The Internet Movie Script Database](https://imsdb.com/all-scripts.html).
 Common female and male lists were provided by Mark Kantrowitz (Copyright (c) January 1991). Thanks to Bill.Ross for the additional names.
 
-![](https://github.com/Yasser-Lahlou/Colorization-app/blob/main/data/Bechdel_test_app_screenshot.png)
+[](https://github.com/Yasser-Lahlou/Colorization-app/blob/main/data/Bechdel_test_app_screenshot.png)
