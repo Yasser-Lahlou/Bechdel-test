@@ -38,6 +38,9 @@ selected_movie = st.selectbox('Search for a movie', df['clean_title'])
 selected_movie_title = df[df['clean_title'] == selected_movie]['title'].item()
 selected_path = f"IMSDB_scripts/{selected_movie_title}.txt"
 
+# Test this movie button
+button = st.button('Test this movie !')
+
 # perform the tests
 script = read_script(selected_path)
 result_1 = bechdel_test_1(script, female_names)
@@ -55,25 +58,26 @@ answer_3_pos = ':white_check_mark: There is a scene where 2 women or more are ta
 answer_3_neg = ":x: There are scenes where 2 women are talking, but they are talking about men"
 not_tested = ':heavy_minus_sign: Not tested'
 
-if result_1:
-    if result_2:
-        if result_3:
-            st.title(test_passed)
-            st.write(answer_1_pos)
-            st.write(answer_2_pos)
-            st.write(answer_3_pos)
+if button :
+    if result_1:
+        if result_2:
+            if result_3:
+                st.title(test_passed)
+                st.write(answer_1_pos)
+                st.write(answer_2_pos)
+                st.write(answer_3_pos)
+            else:
+                st.title(test_failed)
+                st.write(answer_1_pos)
+                st.write(answer_2_pos)
+                st.write(answer_3_neg)
         else:
             st.title(test_failed)
             st.write(answer_1_pos)
-            st.write(answer_2_pos)
-            st.write(answer_3_neg)
+            st.write(answer_2_neg)
+            st.write(not_tested)
     else:
         st.title(test_failed)
-        st.write(answer_1_pos)
-        st.write(answer_2_neg)
+        st.write(answer_1_neg)
         st.write(not_tested)
-else:
-    st.title(test_failed)
-    st.write(answer_1_neg)
-    st.write(not_tested)
-    st.write(not_tested)
+        st.write(not_tested)
