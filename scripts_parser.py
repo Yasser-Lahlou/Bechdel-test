@@ -1,4 +1,5 @@
 import requests, re, csv
+import pandas as pd
 from bs4 import BeautifulSoup
 
 URL = 'https://imsdb.com/all-scripts.html'
@@ -37,13 +38,6 @@ def movie_list():
         wr.writerows(list_urls)
     return list_urls
 
-# create list of movie titles to perform a search
-def movie_csv():
-    list_urls = movie_list()
-    list_titles = [movie[2] for movie in list_urls]
-    with open('data/movie_titles.txt', "w") as f:
-        for title in list_titles:
-            f.write("%s\n" % title)
 # for each movie url, save script content in a .txt file (and identifies errors)
 def scrap_script(title, url, clean_title):
     response = requests.get(url, headers=headers)

@@ -13,7 +13,7 @@ def male_names_generator(filepath):
     return male_names
 
 def movie_titles_generator(filepath):
-    df = pd.read_csv(filepath, names=['title', 'url', 'clean_title'])
+    df = pd.read_csv(filepath)
     return df
 
 def read_script(filepath):
